@@ -33,7 +33,6 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QDialog>
-#include <QFileDialog>
 
 
 using namespace  std;
@@ -214,8 +213,8 @@ void MainWindow::deleteNorMyLibLW()
 }
 void MainWindow::setThis()
 {
-    this->resize(1200,600);
-    this->setWindowTitle("欢迎来到再也不馆管理系统");
+    this->resize(800,400);
+    this->setWindowTitle("图书管理系统");
 }
 void MainWindow::addNorTopLy()
 {
@@ -225,7 +224,7 @@ void MainWindow::addNorTopLy()
 void MainWindow::setNorTopW()
 {
     topW->setLayout(toplayout);
-    topW->setFixedHeight(HEIGHT);
+    topW->setFixedHeight(40);
 }
 void MainWindow::addNorLeftMyLibLy()
 {
@@ -239,7 +238,7 @@ void MainWindow::addNorLeftMyLibLy()
 void MainWindow::setNorLeftW()
 {
     leftW->setLayout(leftlayout);
-    leftW->setFixedWidth(WIDTH);
+    leftW->setFixedWidth(100);
     //leftW->setFixedHeight(150);
 }
 void MainWindow::addNorRightLy()
@@ -282,15 +281,14 @@ void MainWindow::connNor()
 void MainWindow::addAdminTopLy()
 {
     adTopLy->addWidget(adBookBtn);
-    if(user_rank==1)
-        adTopLy->addWidget(adStuBtn);
+    adTopLy->addWidget(adStuBtn);
     adTopLy->addWidget(adToRecommendBtn);
     adTopLy->addWidget(adBorRetBtn);
 }
 void MainWindow::setAdminTopW()
 {
     adTopW->setLayout(adTopLy);
-    adTopW->setFixedHeight(HEIGHT);
+    adTopW->setFixedHeight(40);
 }
 void MainWindow::addAdminBotLy()
 {
@@ -330,18 +328,8 @@ void MainWindow::connAdmin()
     connect(adBorBookBtn,   SIGNAL(clicked(bool)),  this,   SLOT(on_adBorBookBtn_clicked()));
     connect(adRetBookBtn,   SIGNAL(clicked(bool)),  this,   SLOT(on_adRetBookBtn_clicked()));
     connect(sendMsgBtn,   SIGNAL(clicked(bool)),  this,   SLOT(on_sendMsgBtn_clicked()));
-    connect(adBooksAddBtn,   SIGNAL(clicked(bool)),  this,   SLOT(on_adBooksAddBtn_clicked()));
-    connect(adStusAddBtn,   SIGNAL(clicked(bool)),  this,   SLOT(on_adStusAddBtn_clicked()));
 
 }
-void MainWindow::showEr(string ti,string s)
-{
-    ErrorDialog eDlg;
-    eDlg.setWindowTitle(QString::fromStdString(ti));
-    eDlg.showError(QString::fromStdString(s));
-    eDlg.exec();
-}
-
 
 void MainWindow::showNormalUser()
 {
@@ -391,7 +379,7 @@ void MainWindow::on_bookSearchBtn_clicked()
     zzCb_sl<<"按照书名查询"<<"按照ISBN查询";
     zzCb->addItems(zzCb_sl);
     conditionLe = new QLineEdit;
-    conditionLe->setMaxLength(MAXLENGTH);
+    conditionLe->setMaxLength(30);
     midlayout->addWidget(zzCb);
     midlayout->addWidget(conditionLe);
     midlayout->addWidget(searchBtn);
@@ -401,7 +389,6 @@ void MainWindow::on_bookSearchBtn_clicked()
     detailBtn = new QPushButton("详细信息");
     leftlayout->addWidget(detailBtn);
     leftW->setLayout(leftlayout);
-    leftW->setFixedWidth(WIDTH);
 
     //right
     table2 = new QTableWidget;
@@ -431,17 +418,13 @@ void MainWindow::on_searchBtn_clicked()
 {
     int flag = zzCb->currentIndex();
     string sCondition = conditionLe->text().toStdString();
-    if(sCondition.size()==0)
-    {
-        showEr("错误提示","请输入搜索条件");
-        return;
-    }
     vector< vector < string > >res;
     if(flag == 1)
         res = search_Bno(sCondition,0);
     else
         res = search_Bclm("书名",sCondition);
-    table2->setRowCount(res.size()-1);
+    //cout<<res.size()<<endl;
+    table2->setRowCount(res.size());
     for(int i=1;i<res.size();i++)
     {
         for(int j=0;j<res[i].size();j++)
@@ -509,7 +492,7 @@ void MainWindow::on_mainBtn_clicked()
 
     //
     QLabel *caonima  = new QLabel;
-    caonima->setText("欢迎来到再也不馆");
+    caonima->setText("欢迎来到图书馆");
     rightlayout->addWidget(caonima);
     //
 
@@ -538,6 +521,24 @@ void MainWindow::on_myInfoBtn_clicked()
     zztmp.push_back("年纪: " + res[3]);
     for(int i=0;i<res.size();i++)
             rightlayout->addWidget(new QLabel(QString::fromStdString(zztmp[i])));
+
+    /*
+    QLabel *name = new QLabel;
+    name->setText("姓名:zz");
+    rightlayout->addWidget(name);
+
+    QLabel *maxBroNum = new QLabel;
+    maxBroNum->setText("最大可借图书:12");
+    rightlayout->addWidget(maxBroNum);
+
+    QLabel *userType = new QLabel;
+    userType->setText("用户类型:普通用户");
+    rightlayout->addWidget(userType);
+
+    QLabel *maxAppNum = new QLabel;
+    maxAppNum->setText("最大可预约数量:3");
+    rightlayout->addWidget(maxAppNum);
+    */
     rightW->setLayout(rightlayout);
     addNorBotLy();
     setNorBotW();
@@ -575,7 +576,6 @@ void MainWindow::on_curBorrowBtn_clicked()
     }
 
     rightlayout->addWidget(table1);
-    rightlayout->addWidget(new QLabel("状态0表示已还，状态1表示未还"));
     //
     rightW->setLayout(rightlayout);
     addNorBotLy();
@@ -616,7 +616,6 @@ void MainWindow::on_hisBorrowBtn_clicked()
     rightlayout->addWidget(table1);
     //
     rightW->setLayout(rightlayout);
-    rightlayout->addWidget(new QLabel("状态0表示已还，状态1表示未还"));
     addNorBotLy();
     setNorBotW();
     addNorMainLy(0);
@@ -655,9 +654,7 @@ void MainWindow::on_recommendBtn_clicked()
 
     rightlayout->addWidget(table1);
     toRecommendBtn = new QPushButton("图书荐购");
-    rightlayout->addWidget(new QLabel("状态1表示未处理，状态0表示已购买"));
     rightlayout->addWidget(toRecommendBtn);
-
     //
 
     rightW->setLayout(rightlayout);
@@ -671,11 +668,8 @@ void MainWindow::on_recommendBtn_clicked()
 
 void MainWindow::on_toRecommendBtn_clicked()
 {
-    cout<<"1"<<endl;
     toRecDialog toRecDlg;
-    cout<<2<<endl;
     toRecDlg.exec();
-    cout<<"3"<<endl;
     on_recommendBtn_clicked();
 }
 
@@ -708,7 +702,6 @@ void MainWindow::on_appointBtn_clicked()
     }
 
     rightlayout->addWidget(table1);
-    rightlayout->addWidget(new QLabel("状态1表示还未借到书,0表示已借到书"));
     //
     rightW->setLayout(rightlayout);
 
@@ -736,7 +729,7 @@ void MainWindow::showAdministrator()
     zzCb_sl<<"按照书名查询"<<"按照书号查询";
     zzCb->addItems(zzCb_sl);
     adconditionLe = new QLineEdit;
-    adconditionLe->setMaxLength(20);
+    adconditionLe->setMaxLength(30);
     adMidLy->addWidget(zzCb);
     adMidLy->addWidget(adconditionLe);
     adMidLy->addWidget(adBookSearchBtn);
@@ -747,7 +740,7 @@ void MainWindow::showAdministrator()
     adLeftLy->addWidget(adBookUpdateBtn);
     adLeftLy->addWidget(adBooksAddBtn);
     adLeftW->setLayout(adLeftLy);
-    adLeftW->setFixedWidth(WIDTH);
+    adLeftW->setFixedWidth(100);
     //leftW->setFixedHeight(150);
     //右边
     table1 = new QTableWidget;
@@ -784,11 +777,6 @@ void MainWindow::on_adBookSearchBtn_clicked()
 {
     int flag = zzCb->currentIndex();
     string sCondition = adconditionLe->text().toStdString();
-    if(sCondition.size()==0)
-    {
-        showEr("错误提示","请输入搜索条件");
-        return;
-    }
     vector< vector < string > >res;
     if(flag == 1)
         res = search_Bno(sCondition,0);
@@ -807,12 +795,10 @@ void MainWindow::on_adBookSearchBtn_clicked()
 
 void MainWindow::on_adBookAddBtn_clicked()
 {
-    cout<<0<<endl;
     AddBookDialog aBDlg;
-    cout<<"1"<<endl;
     aBDlg.transmit1(1);
-    cout<<"2"<<endl;
     aBDlg.exec();
+    //on_adBookSearchBtn_clicked();
 }
 
 void MainWindow::on_adBookDeleteBtn_clicked()
@@ -826,6 +812,7 @@ void MainWindow::on_adBookDeleteBtn_clicked()
         DBDlg.transmit(gouziBook,1);
         DBDlg.setWindowTitle("图书详细信息");
         DBDlg.exec();
+        //on_adBookSearchBtn_clicked();
     }
     else
     {
@@ -862,25 +849,8 @@ void MainWindow::on_adBookUpdateBtn_clicked()
     }
 }
 
-void MainWindow::on_adBooksAddBtn_clicked()
+void MainWindow::on_adBooskAddBtn_clicked()
 {
-    QFileDialog *fDlg = new QFileDialog(this);
-    fDlg->setWindowTitle("选择导入文件");
-    fDlg->setAcceptMode(QFileDialog::AcceptOpen);
-    fDlg->setViewMode(QFileDialog::Detail);
-    if(fDlg->exec() == QDialog::Accepted)
-    {
-        QString zzpath = fDlg->selectedFiles()[0];
-        string zzspath = zzpath.toStdString();
-        cout<<zzspath<<endl;
-        int zzcnt;
-        ConfirmDialog cfDlg;
-        cfDlg.setWindowTitle("导入图书");
-        cfDlg.showMsg(QString::fromStdString("是否确定导入？"));
-        cfDlg.transmit(1);
-        cfDlg.import_data(zzpath.toStdString());
-        cfDlg.exec();
-    }
 
 }
 
@@ -900,7 +870,7 @@ void MainWindow::on_adStuBtn_clicked()
     zzLb->setText("查询学号");
     adMidLy->addWidget(zzLb);
     adconditionLe = new QLineEdit;
-    adconditionLe->setMaxLength(15);
+    adconditionLe->setMaxLength(10);
     adMidLy->addWidget(adconditionLe);
     adMidLy->addWidget(adStuSearchBtn);
     adMidW->setLayout(adMidLy);
@@ -912,7 +882,7 @@ void MainWindow::on_adStuBtn_clicked()
     adLeftLy->addWidget(adStuCurBorBtn);
     adLeftLy->addWidget(adStusAddBtn);
     adLeftW->setLayout(adLeftLy);
-    adLeftW->setFixedWidth(WIDTH);
+    adLeftW->setFixedWidth(100);
     //leftW->setFixedHeight(150);
     //右边
     table1 = new QTableWidget;
@@ -927,7 +897,6 @@ void MainWindow::on_adStuBtn_clicked()
     table1->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table1->setSelectionMode(QAbstractItemView::SingleSelection);
     adRightLy->addWidget(table1);
-    adRightLy->addWidget(new QLabel("状态为0表示正常状态，为1表示冻结状态"));
     adRightW->setLayout(adRightLy);
 
     addAdminBotLy();
@@ -940,15 +909,9 @@ void MainWindow::on_adStuBtn_clicked()
 void MainWindow::on_adStuSearchBtn_clicked()
 {
     string sCondition = adconditionLe->text().toStdString();
-    if(sCondition.size()==0)
-    {
-        showEr("错误提示","请输入搜索条件");
-        return;
-    }
     vector< vector < string > >res;
     vector< string> tmp;
     vector< string> all_name;
-    /*
     if(sCondition.size()==0)
     {
         //cout<<"caonima"<<endl;
@@ -961,25 +924,10 @@ void MainWindow::on_adStuSearchBtn_clicked()
         }
     }
     else
-    */
-    //{
-
+    {
         tmp = user_info(sCondition);
-        cout<<"tmp.size() = "<<tmp.size()<<endl;
         res.push_back(tmp);
-        cout<<"res.size() = "<<res.size()<<endl;
-
-    //}
-        if(tmp.size()!=0)
-        {
-            table1->setRowCount(1);
-            for(int i=0;i<tmp.size();i++)
-                table1->setItem(0,i,new QTableWidgetItem(QString::fromStdString(tmp[i])));
-        }
-        else
-            table1->setRowCount(0);
-
-        /*
+    }
     table1->setRowCount(res.size());
     for(int i=0;i<res.size();i++)
     {
@@ -988,7 +936,6 @@ void MainWindow::on_adStuSearchBtn_clicked()
             table1->setItem(i,j,new QTableWidgetItem(QString::fromStdString(res[i][j])));
         }
     }
-    */
 }
 
 void MainWindow::on_adStuAddBtn_clicked()
@@ -1018,10 +965,12 @@ void MainWindow::on_adStuDeleteBtn_clicked()
             {
                 eDlg.showError(QString::fromStdString("删除成功"));
             }
+            else if(zz_Res==1)
+                eDlg.showError(QString::fromStdString("未知错误"));
             else if(zz_Res == 2)
                 eDlg.showError(QString::fromStdString("没有权限"));
             else
-                eDlg.showError(QString::fromStdString("删除错误"));
+                eDlg.showError(QString::number(zz_Res,10));
             eDlg.exec();
         }
     }
@@ -1047,7 +996,6 @@ void MainWindow::on_adStuUpdateBtn_clicked()
         aSDlg.setWindowTitle("修改学生信息");
         aSDlg.transmit1(2);
         aSDlg.transmit2(vtmp);
-        cout<<"000"<<endl;
         aSDlg.exec();
     }
     else
@@ -1101,22 +1049,7 @@ void MainWindow::on_adStuCurBorBtn_clicked()
 
 void MainWindow::on_adStusAddBtn_clicked()
 {
-    QFileDialog *fDlg = new QFileDialog(this);
-    fDlg->setWindowTitle("选择导入文件");
-    fDlg->setAcceptMode(QFileDialog::AcceptOpen);
-    fDlg->setViewMode(QFileDialog::Detail);
-    if(fDlg->exec() == QDialog::Accepted)
-    {
-        QString zzpath = fDlg->selectedFiles()[0];
-        string zzspath = zzpath.toStdString();
-        int zzcnt;
-        ConfirmDialog cfDlg;
-        cfDlg.setWindowTitle("导入用户");
-        cfDlg.showMsg(QString::fromStdString("是否确定导入？"));
-        cfDlg.transmit(2);
-        cfDlg.import_data(zzpath.toStdString());
-        cfDlg.exec();
-    }
+
 }
 
 void MainWindow::on_adToRecommendBtn_clicked()
@@ -1136,14 +1069,14 @@ void MainWindow::on_adToRecommendBtn_clicked()
     zzLb->setText("荐购查询");
     adMidLy->addWidget(zzLb);
     adconditionLe = new QLineEdit;
-    adconditionLe->setMaxLength(15);
+    adconditionLe->setMaxLength(10);
     adMidLy->addWidget(adconditionLe);
     adMidLy->addWidget(adRecomBtn);
     adMidW->setLayout(adMidLy);
     //左边导航栏
     adLeftLy->addWidget(adRecUpdateBtn);
     adLeftW->setLayout(adLeftLy);
-    adLeftW->setFixedWidth(WIDTH);
+    adLeftW->setFixedWidth(100);
     //leftW->setFixedHeight(150);
     //右边
     table1 = new QTableWidget;
@@ -1158,7 +1091,6 @@ void MainWindow::on_adToRecommendBtn_clicked()
     table1->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table1->setSelectionMode(QAbstractItemView::SingleSelection);
     adRightLy->addWidget(table1);
-    adRightLy->addWidget(new QLabel("状态1表示未处理，状态0表示已购买"));
     adRightW->setLayout(adRightLy);
     addAdminBotLy();
     setAdminBotW();
@@ -1181,10 +1113,10 @@ void MainWindow::on_adRecUpdateBtn_clicked()
         int ccRes = read_recommend(ccuser,ccISBN);
         if(ccRes == 0)
             eDlg.showError("修改成功，该书已为购买状态");
+        else if(ccRes == 1)
+            eDlg.showError("未知错误");
         else if(ccRes == 2)
             eDlg.showError("没权限");
-        else
-            eDlg.showError("错误");
         eDlg.exec();
     }
     else
@@ -1231,7 +1163,7 @@ void MainWindow::on_adBorRetBtn_clicked()
      adLeftLy->addWidget(adBorBookBtn);
      adLeftLy->addWidget(adRetBookBtn);
      adLeftW->setLayout(adLeftLy);
-     adLeftW->setFixedWidth(WIDTH);
+     adLeftW->setFixedWidth(100);
      //leftW->setFixedHeight(150);
      //右边
      QLabel *BnoLb = new QLabel("ISBN号码");
@@ -1240,9 +1172,6 @@ void MainWindow::on_adBorRetBtn_clicked()
      BnoLe = new QLineEdit;
      EnoLe = new QLineEdit;
      userLe = new QLineEdit;
-     BnoLe->setMaxLength(20);
-     EnoLe->setMaxLength(2);
-     userLe->setMaxLength(15);
      QGridLayout *tmpAdRightLy = new QGridLayout;
 
      tmpAdRightLy->addWidget(BnoLb,1,0,1,1);
@@ -1268,19 +1197,13 @@ void MainWindow::on_adBorBookBtn_clicked()
     string sBno = BnoLe->text().toStdString();
     int sEno = EnoLe->text().toInt();
     string ssUser = userLe->text().toStdString();
-    vector<string> zzRes1 = user_info(ssUser);
-    if(zzRes1.size()==0)
-    {
-        showEr("错误提示","没有该用户");
-        return ;
-    }
     ErrorDialog eDlg;
     eDlg.setWindowTitle("借书");
     int ccRes = borrow(sBno,sEno,ssUser,30);
     if(ccRes == 0)
         eDlg.showError(QString::fromStdString("借书成功"));
-    else
-        eDlg.showError(QString::fromStdString("借书失败"));
+    else if (ccRes == 1)
+        eDlg.showError(QString::fromStdString("结束失败"));
    eDlg.exec();
 }
 

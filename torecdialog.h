@@ -18,6 +18,8 @@ public:
 private slots:
     void on_closeBtn_clicked();
 
+    void on_toRecBtn_clicked();
+
 private:
     Ui::toRecDialog *ui;
 };

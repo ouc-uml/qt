@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include "global.h"
+#include "connect.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,16 +15,14 @@ int main(int argc, char *argv[])
     LoginDialog *logindlg = new LoginDialog;
     if(logindlg->exec() == QDialog::Accepted )
     {
-        if(user_Type==0){
-            main->showNormalUser();
-            main->show();
-            return a.exec();
-        }
+        if(user_rank<6)
+            main->showAdministrator();
         else
         {
-            main->showAdministrator();
-            main->show();
-            return a.exec();
+            main->showNormalUser();
+           // main->recMsg();
         }
+        main->show();
+        return a.exec();
     }
 }

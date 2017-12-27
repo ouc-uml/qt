@@ -6,6 +6,8 @@
 
 QT       += core gui
 
+LIBS += -lpthread libwsock32 libws2_32
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = books
@@ -28,15 +30,45 @@ SOURCES += \
         mainwindow.cpp \
     logindialog.cpp \
     global.cpp \
-    torecdialog.cpp
+    torecdialog.cpp \
+    errordialog.cpp \
+    confirmdialog.cpp \
+    addbookdialog.cpp \
+    addstudialog.cpp \
+    stubordialog.cpp \
+    md5.cpp \
+    changepwddialog.cpp \
+    clients.cpp \
+    library.cpp \
+    deletebookdialog.cpp \
+    sendmsgdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     logindialog.h \
     global.h \
-    torecdialog.h
+    torecdialog.h \
+    errordialog.h \
+    confirmdialog.h \
+    addbookdialog.h \
+    addstudialog.h \
+    stubordialog.h \
+    connect.h \
+    library.h \
+    md5.h \
+    changepwddialog.h \
+    deletebookdialog.h \
+    sendmsgdialog.h
 
 FORMS += \
         mainwindow.ui \
     logindialog.ui \
-    torecdialog.ui
+    torecdialog.ui \
+    errordialog.ui \
+    confirmdialog.ui \
+    addbookdialog.ui \
+    addstudialog.ui \
+    stubordialog.ui \
+    changepwddialog.ui \
+    deletebookdialog.ui \
+    sendmsgdialog.ui
